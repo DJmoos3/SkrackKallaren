@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { DECADES, SORTS, SUBGENRES, getMovies } from "../api/tmdb";
-import useFetch from "../hooks/useFetch";
-import MovieCard from "../components/MovieCard";
-import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
+import Loader from "../components/Loader";
+import MovieCard from "../components/MovieCard";
+import useFetch from "../hooks/useFetch";
 
 export default function Catalog() {
   const [input, setInput] = useState("");
@@ -14,13 +14,14 @@ export default function Catalog() {
   const [page, setPage] = useState(1);
 
   // Vänta 400 ms efter sista tangenttryckningen innan vi söker
-  useEffect(() => {
-    const t = setTimeout(() => {
-      setQuery(input.trim());
-      setPage(1);
-    }, 400);
-    return () => clearTimeout(t);
-  }, [input]);
+    useEffect(() => {
+        const t = setTimeout(() => {
+            const text = input.trim();
+            setQuery(text.length >= 2 ? text : "");
+            setPage(1);
+        }, 400);
+        return () => clearTimeout(t);
+    }, [input]);
 
   const movies = useFetch(
     (signal) => getMovies({ query, subgenre, decade, sort, page }, signal),
@@ -69,18 +70,18 @@ export default function Catalog() {
 
       {!movies.loading && !movies.error && (
         <>
-          {movies.data.results.length === 0 ? (
-            <p>
-              Inga skräckfilmer hittades på den här sidan. Prova ett annat sökord eller filter,
-              eller gå till nästa sida.
-            </p>
-          ) : (
-            <div className="grid">
-              {movies.data.results.map((m) => (
-                <MovieCard key={m.id} movie={m} />
-              ))}
-            </div>
-          )}
+          {results.length === 0 ? (
+                      <p>
+                          Inga skräckfilmer hittades på den här sidan. Prova ett annat sökord eller filter,
+                          eller gå till nästa sida.
+                      </p>
+                  ) : (
+                      <div className="grid">
+                          {results.map((m) => (
+                              <MovieCard key={m.id} movie={m} />
+                          ))}
+                      </div>
+                  )}
           <div className="pagination">
             <button className="btn ghost" disabled={page <= 1} onClick={() => setPage(page - 1)}>
               Föregående
