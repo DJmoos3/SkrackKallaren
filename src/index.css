@@ -1,0 +1,82 @@
+:root {
+  --bg: #0b0809;
+  --surface: #181214;
+  --text: #ece6e1;
+  --muted: #9b8e8a;
+  --accent: #d1281f;
+  --danger: #ff8a7a;
+  --radius: 6px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", system-ui, sans-serif;
+  line-height: 1.55;
+}
+h1, h2, h3, .logo { font-family: "Special Elite", "Courier New", monospace; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin: 1rem 0; }
+a { color: #e8574d; }
+img { max-width: 100%; display: block; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1rem 3rem; }
+
+.navbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .8rem 1.5rem; background: var(--surface);
+  position: sticky; top: 0; z-index: 10;
+}
+.navbar nav { display: flex; gap: 1.2rem; align-items: center; }
+.navbar a { text-decoration: none; color: var(--text); }
+.navbar a.active { color: #fff; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 6px; }
+.logo { font-size: 1.5rem; letter-spacing: .02em; color: var(--accent) !important; }
+
+input, select {
+  background: var(--surface); color: var(--text);
+  border: 1px solid #3a2a2d; border-radius: var(--radius);
+  padding: .55rem .8rem; font: inherit;
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.btn {
+  background: var(--accent); color: #fff; border: 0;
+  border-radius: var(--radius); padding: .5rem .9rem;
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.btn.ghost { background: transparent; color: var(--text); border: 1px solid #4a3539; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.filters { display: flex; gap: .8rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.filters input { flex: 1; min-width: 220px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.2rem; }
+.card { background: var(--surface); border-radius: var(--radius); padding: .7rem; display: flex; flex-direction: column; }
+.card a { color: inherit; text-decoration: none; }
+.card img, .no-poster { border-radius: 6px; aspect-ratio: 2/3; width: 100%; object-fit: cover; }
+.no-poster { display: grid; place-items: center; background: #2a1f22; color: var(--muted); }
+.card h3 { font-size: 1rem; margin: .6rem 0 .1rem; }
+.meta { color: var(--muted); font-size: .9rem; margin: .1rem 0 .6rem; }
+.card-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.card-footer .btn { font-size: .8rem; padding: .4rem .6rem; }
+
+.pagination { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; }
+
+.loader { display: flex; align-items: center; gap: .8rem; padding: 2rem 0; color: var(--muted); }
+.spinner { width: 22px; height: 22px; border: 3px solid #4a3539; border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+
+.error { border: 1px solid var(--danger); color: var(--danger); padding: 1rem; border-radius: var(--radius); margin: 1rem 0; }
+
+.detail-body { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; margin-top: 1rem; }
+.tagline { color: var(--muted); font-style: italic; }
+.buy-box { background: var(--surface); padding: 1rem; border-radius: var(--radius); display: grid; gap: .6rem; margin-top: 1.2rem; max-width: 340px; }
+.video { position: relative; aspect-ratio: 16/9; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: var(--radius); }
+
+.cart-list { list-style: none; padding: 0; display: grid; gap: .8rem; }
+.cart-list li { display: grid; grid-template-columns: 56px 1fr auto auto; gap: 1rem; align-items: center; background: var(--surface); padding: .6rem; border-radius: var(--radius); }
+.cart-list img { border-radius: 4px; }
+.total { font-size: 1.3rem; font-weight: 700; }
+
+@media (max-width: 720px) { .detail-body { grid-template-columns: 1fr; } }
