@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { IMG, RENT_FACTOR, getMovie, priceFor } from "../api/tmdb";
+import { addItem, removeItem } from "../store/cartSlice";
 import useFetch from "../hooks/useFetch";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
@@ -7,7 +10,10 @@ import Price from "../components/Price";
 
 export default function MovieDetail() {
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const [mode, setMode] = useState("buy");
   const { data: movie, loading, error } = useFetch((s) => getMovie(id, s), [id]);
+  const inCart = useSelector((s) => s.cart.items.some((i) => i.id === Number(id)));
 
   if (loading) return <Loader text="Gräver fram filmfakta…" />;
   if (error) return <ErrorMessage message={error} />;
@@ -15,6 +21,19 @@ export default function MovieDetail() {
   const base = priceFor(movie);
   const director = movie.credits?.crew.find((c) => c.job === "Director");
   const cast = movie.credits?.cast.slice(0, 6).map((c) => c.name).join(", ");
+
+  const toggle = () =>
+    dispatch(
+      inCart
+        ? removeItem(movie.id)
+        : addItem({
+            id: movie.id,
+            title: movie.title,
+            poster_path: movie.poster_path,
+            basePrice: mode === "rent" ? Math.round(base * RENT_FACTOR) : base,
+            mode,
+          })
+    );
 
   return (
     <main className="detail">
@@ -35,11 +54,21 @@ export default function MovieDetail() {
           {cast && <p><strong>Skådespelare:</strong> {cast}</p>}
 
           <div className="buy-box">
-            <span>Köp <Price amount={base} /></span>
-            <span>Hyr <Price amount={Math.round(base * RENT_FACTOR)} /></span>
+            <label>
+              <input type="radio" checked={mode === "buy"} onChange={() => setMode("buy")} disabled={inCart} /> Köp{" "}
+              <Price amount={base} />
+            </label>
+            <label>
+              <input type="radio" checked={mode === "rent"} onChange={() => setMode("rent")} disabled={inCart} /> Hyr{" "}
+              <Price amount={Math.round(base * RENT_FACTOR)} />
+            </label>
+            <button className={inCart ? "btn ghost" : "btn"} onClick={toggle}>
+              {inCart ? "Ta bort från kundvagn" : "Lägg i kundvagn"}
+            </button>
           </div>
         </div>
       </div>
+
     </main>
   );
 }
