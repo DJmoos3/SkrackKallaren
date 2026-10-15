@@ -50,7 +50,10 @@ export default function MovieDetail() {
             {movie.release_date?.slice(0, 4)} · {movie.runtime} min · ★ {movie.vote_average?.toFixed(1)} ·{" "}
             {movie.genres.map((g) => g.name).join(", ")}
           </p>
-          <p>{movie.overview || "Det finns ingen svensk beskrivning av den här filmen."}</p>
+          <p>{movie.overview || "Det finns ingen beskrivning av den här filmen."}</p>
+             {movie.overviewIsEnglish && (
+          <p className="meta">Svensk beskrivning saknas, så den engelska visas.</p>
+          )}
           {director && <p><strong>Regi:</strong> {director.name}</p>}
           {cast && <p><strong>Skådespelare:</strong> {cast}</p>}
 
