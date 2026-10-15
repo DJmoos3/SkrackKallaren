@@ -86,8 +86,22 @@ export async function getHorrorPool({ subgenre, decade }, signal) {
     return movies;
 }
 
-export function getMovie(id, signal) {
-    return request(`/movie/${id}`, { append_to_response: "videos,credits" }, signal);
+export async function getMovie(id, signal) {
+    const movie = await request(
+        `/movie/${id}`,
+        { append_to_response: "videos,credits", include_video_language: "sv,en,null" },
+        signal
+    );
+
+    // Saknas den svenska beskrivningen: hämta den engelska i stället
+    if (!movie.overview) {
+        const en = await request(`/movie/${id}`, { language: "en-US" }, signal);
+        movie.overview = en.overview;
+        movie.overviewIsEnglish = Boolean(en.overview);
+        if (!movie.tagline) movie.tagline = en.tagline;
+    }
+
+    return movie;
 }
 
 // Påhittat butikspris (SEK): bra betyg och äldre kultfilmer är dyrare ("samlarpris")
