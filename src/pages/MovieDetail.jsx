@@ -19,6 +19,7 @@ export default function MovieDetail() {
   if (error) return <ErrorMessage message={error} />;
 
   const base = priceFor(movie);
+  const trailer = movie.videos?.results.find((v) => v.site === "YouTube" && v.type === "Trailer");
   const director = movie.credits?.crew.find((c) => c.job === "Director");
   const cast = movie.credits?.cast.slice(0, 6).map((c) => c.name).join(", ");
 
@@ -69,6 +70,18 @@ export default function MovieDetail() {
         </div>
       </div>
 
+      {trailer && (
+        <section>
+          <h2>Trailer</h2>
+          <div className="video">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${trailer.key}`}
+              title={`Trailer för ${movie.title}`}
+              allowFullScreen
+            />
+          </div>
+        </section>
+      )}
     </main>
   );
 }
